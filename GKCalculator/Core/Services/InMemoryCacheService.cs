@@ -2,8 +2,6 @@
 using System.Linq;
 using Infrastructure.Services;
 using Infrastructure.Utility;
-using Model;
-using Model.DataTransfer;
 using Model.Domain;
 
 namespace Core.Services
@@ -11,6 +9,8 @@ namespace Core.Services
     public class InMemoryNodeCacheService : INodeCacheService
     {
         private readonly IExcelParsing _excelParsing;
+
+        private readonly object _cacheLocker = new object();
 
         private List<PathModel> _edges;
         private List<string> _sources;
@@ -27,7 +27,13 @@ namespace Core.Services
             {
                 if (_edges == null)
                 {
-                    _edges = _excelParsing.ParseExcel();
+                    lock (_cacheLocker)
+                    {
+                        if (_edges == null)
+                        {
+                            _edges = _excelParsing.ParseExcel();
+                        }
+                    }
                 }
 
                 return _edges;

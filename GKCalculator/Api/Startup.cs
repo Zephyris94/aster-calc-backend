@@ -1,5 +1,6 @@
 using Core;
 using Core.Services;
+using Core.Settings;
 using Core.Utility;
 using Infrastructure;
 using Infrastructure.Services;
@@ -25,6 +26,8 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
+
+            services.AddOptions<DataSourceOptions>();
 
             services.AddScoped<IPathFindingService, PathFindingService>();
             services.AddScoped<IGraphBuildingService, GraphBuildingService>();

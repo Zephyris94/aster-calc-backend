@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using Core.Settings;
 using ExcelDataReader;
 using Infrastructure.Utility;
+using Microsoft.Extensions.Options;
 using Model;
 using Model.Domain;
 
@@ -10,11 +12,18 @@ namespace Core.Utility
 {
     public class ExcelParsing : IExcelParsing
     {
+        private readonly string _excelFilePath;
+
+        public ExcelParsing(IOptions<DataSourceOptions> dataSourceOptions)
+        {
+            _excelFilePath = dataSourceOptions.Value.ExcelPath;
+        }
+
         public List<PathModel> ParseExcel()
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             var models = new List<PathModel>();
-            using (var stream = File.Open("tps.xlsx", FileMode.Open, FileAccess.Read))
+            using (var stream = File.Open(_excelFilePath, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
