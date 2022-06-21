@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Model;
 
-namespace GKCalculator.Models
+namespace Model.DataTransfer
 {
-    public class CalculationResultModel
+    public class LineagePathFindingResponse
     {
-        public List<PathModel> DefaultPath { get; set; }
+        public List<PathModelResponse> DefaultPath { get; set; }
 
-        public List<PathModel> CustomPath { get; set; }
+        public List<PathModelResponse> CustomPath { get; set; }
 
         public int DefaultPrice => DefaultPath.Sum(x => x.Price);
 

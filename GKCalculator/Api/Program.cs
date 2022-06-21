@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Core;
 
 namespace Api
 {
@@ -8,10 +7,6 @@ namespace Api
     {
         public static void Main(string[] args)
         {
-            var parsedData = ExcelParser.ParseExcel();
-
-            GraphConverter.InitTpTable(parsedData);
-
             CreateHostBuilder(args).Build().Run();
         }
 

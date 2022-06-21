@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Model.Domain;
 
 namespace Model.Graph
 {
@@ -50,13 +51,13 @@ namespace Model.Graph
         /// <param name="firstName">Имя первой вершины</param>
         /// <param name="secondName">Имя второй вершины</param>
         /// <param name="weight">Вес ребра соединяющего вершины</param>
-        public void AddEdge(PathModel model)
+        public void AddEdge(PathModel modelResponse)
         {
-            var v1 = FindVertex(model.Source);
-            var v2 = FindVertex(model.Destination);
+            var v1 = FindVertex(modelResponse.Source);
+            var v2 = FindVertex(modelResponse.Destination);
             if (v2 != null && v1 != null)
             {
-                v1.AddEdge(v2, model.Price, model.Type);
+                v1.AddEdge(v2, modelResponse.Price, modelResponse.Type);
             }
         }
     }

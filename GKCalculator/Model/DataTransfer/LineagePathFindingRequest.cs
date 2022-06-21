@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace GKCalculator.Models
+namespace Model.DataTransfer
 {
-    public class PathRequestModel
+    public class LineagePathFindingRequest
     {
         public string SourcePoint { get; set; }
 

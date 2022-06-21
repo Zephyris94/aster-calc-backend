@@ -2,13 +2,15 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using ExcelDataReader;
+using Infrastructure.Utility;
 using Model;
+using Model.Domain;
 
-namespace Core
+namespace Core.Utility
 {
-    public static class ExcelParser
+    public class ExcelParsing : IExcelParsing
     {
-        public static List<PathModel> ParseExcel()
+        public List<PathModel> ParseExcel()
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             var models = new List<PathModel>();

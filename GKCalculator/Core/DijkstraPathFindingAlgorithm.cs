@@ -1,33 +1,29 @@
 ﻿using System.Collections.Generic;
+using Infrastructure;
 using Model.Graph;
 
 namespace Core
 {
-    public class Dijkstra
+    public class DijkstraPathFindingAlgorithm: IPathFindingAlgorithm
     {
-        Graph graph;
+        private Graph _graph;
 
-        List<GraphVertexInfo> infos;
+        private List<GraphVertexInfo> _infos;
 
-        /// <summary>
-        /// Конструктор
-        /// </summary>
-        /// <param name="graph">Граф</param>
-        public Dijkstra(Graph graph)
+        public void InitDijkstraPathFindingAlgorithm(Graph graph)
         {
-            this.graph = graph;
+            this._graph = graph;
         }
 
         /// <summary>
-        /// Инициализация информации
+        /// Поиск кратчайшего пути по названиям вершин
         /// </summary>
-        void InitInfo()
+        /// <param name="startName">Название стартовой вершины</param>
+        /// <param name="finishName">Название финишной вершины</param>
+        /// <returns>Кратчайший путь</returns>
+        public string FindShortestPath(string startName, string finishName)
         {
-            infos = new List<GraphVertexInfo>();
-            foreach (var v in graph.Vertices)
-            {
-                infos.Add(new GraphVertexInfo(v));
-            }
+            return FindShortestPath(_graph.FindVertex(startName), _graph.FindVertex(finishName));
         }
 
         /// <summary>
@@ -35,9 +31,9 @@ namespace Core
         /// </summary>
         /// <param name="v">Вершина</param>
         /// <returns>Информация о вершине</returns>
-        GraphVertexInfo GetVertexInfo(GraphVertex v)
+        private GraphVertexInfo GetVertexInfo(GraphVertex v)
         {
-            foreach (var i in infos)
+            foreach (var i in _infos)
             {
                 if (i.Vertex.Equals(v))
                 {
@@ -49,14 +45,26 @@ namespace Core
         }
 
         /// <summary>
+        /// Инициализация информации
+        /// </summary>
+        private void InitInfo()
+        {
+            _infos = new List<GraphVertexInfo>();
+            foreach (var v in _graph.Vertices)
+            {
+                _infos.Add(new GraphVertexInfo(v));
+            }
+        }
+
+        /// <summary>
         /// Поиск непосещенной вершины с минимальным значением суммы
         /// </summary>
         /// <returns>Информация о вершине</returns>
-        public GraphVertexInfo FindUnvisitedVertexWithMinSum()
+        private GraphVertexInfo FindUnvisitedVertexWithMinSum()
         {
             var minValue = int.MaxValue;
             GraphVertexInfo minVertexInfo = null;
-            foreach (var i in infos)
+            foreach (var i in _infos)
             {
                 if (i.IsUnvisited && i.EdgesWeightSum < minValue)
                 {
@@ -69,23 +77,12 @@ namespace Core
         }
 
         /// <summary>
-        /// Поиск кратчайшего пути по названиям вершин
-        /// </summary>
-        /// <param name="startName">Название стартовой вершины</param>
-        /// <param name="finishName">Название финишной вершины</param>
-        /// <returns>Кратчайший путь</returns>
-        public string FindShortestPath(string startName, string finishName)
-        {
-            return FindShortestPath(graph.FindVertex(startName), graph.FindVertex(finishName));
-        }
-
-        /// <summary>
         /// Поиск кратчайшего пути по вершинам
         /// </summary>
         /// <param name="startVertex">Стартовая вершина</param>
         /// <param name="finishVertex">Финишная вершина</param>
         /// <returns>Кратчайший путь</returns>
-        public string FindShortestPath(GraphVertex startVertex, GraphVertex finishVertex)
+        private string FindShortestPath(GraphVertex startVertex, GraphVertex finishVertex)
         {
             InitInfo();
             var first = GetVertexInfo(startVertex);
@@ -108,7 +105,7 @@ namespace Core
         /// Вычисление суммы весов ребер для следующей вершины
         /// </summary>
         /// <param name="info">Информация о текущей вершине</param>
-        void SetSumToNextVertex(GraphVertexInfo info)
+        private void SetSumToNextVertex(GraphVertexInfo info)
         {
             info.IsUnvisited = false;
             foreach (var e in info.Vertex.Edges)
@@ -129,7 +126,7 @@ namespace Core
         /// <param name="startVertex">Начальная вершина</param>
         /// <param name="endVertex">Конечная вершина</param>
         /// <returns>Путь</returns>
-        string GetPath(GraphVertex startVertex, GraphVertex endVertex)
+        private string GetPath(GraphVertex startVertex, GraphVertex endVertex)
         {
             var path = endVertex.ToString();
             while (startVertex != endVertex)
