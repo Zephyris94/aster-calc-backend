@@ -10,7 +10,7 @@ namespace Core
 
         private List<GraphVertexInfo> _infos;
 
-        public void InitDijkstraPathFindingAlgorithm(Graph graph)
+        public void InitAlgorithm(Graph graph)
         {
             this._graph = graph;
         }

@@ -28,7 +28,7 @@ namespace Core.Services
             var edges = _graphBuildingService.GetRequiredEdges(_cacheService.Edges, request.UseWyvern, request.UseShips, request.UseSoe);
             var graph = _graphBuildingService.GetGraphFromEdges(edges);
 
-            _pathFindingAlgorithm.InitDijkstraPathFindingAlgorithm(graph);
+            _pathFindingAlgorithm.InitAlgorithm(graph);
 
             var path = _pathFindingAlgorithm.FindShortestPath(request.SourcePoint, request.Destinations[0]);
             for (int i = 0; i < request.Destinations.Count - 1; i++)
