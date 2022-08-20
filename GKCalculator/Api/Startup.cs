@@ -1,3 +1,4 @@
+using Api.MappingProfiles;
 using Core;
 using Core.Services;
 using Core.Settings;
@@ -30,6 +31,8 @@ namespace Api
             services.AddOptions<DataSourceOptions>();
 
             services.Configure<DataSourceOptions>(Configuration.GetSection("DataSource"));
+
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<IPathFindingService, PathFindingService>();
             services.AddScoped<IGraphBuildingService, GraphBuildingService>();
