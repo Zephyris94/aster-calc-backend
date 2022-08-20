@@ -30,7 +30,7 @@ namespace Api.Controllers
         }
 
         [HttpPost("Calculate")]
-        [EnableCors("AllowAllOrigins")]
+        [EnableCors("AllowOrigin")]
         public LineagePathFindingResponse Post(LineagePathFindingRequest request)
         {
             var defaultRequestModel = _mapper.Map<LineagePathFindingModel>(CreateDefaultRequest(request));

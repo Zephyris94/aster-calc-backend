@@ -17,14 +17,14 @@ namespace Api.Controllers
         }
 
         [HttpGet("Sources")]
-        [EnableCors("AllowAllOrigins")]
+        [EnableCors("AllowOrigin")]
         public List<string> Sources()
         {
             return _nodeCacheService.GetSources();
         }
 
         [HttpGet("Destinations")]
-        [EnableCors("AllowAllOrigins")]
+        [EnableCors("AllowOrigin")]
         public List<string> Destinations()
         {
             return _nodeCacheService.GetDestinations();
