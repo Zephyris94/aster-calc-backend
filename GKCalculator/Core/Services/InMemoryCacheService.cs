@@ -47,7 +47,7 @@ namespace Core.Services
                 InitSources();
             }
 
-            return _destinations;
+            return _sources;
         }
 
         public List<string> GetDestinations()

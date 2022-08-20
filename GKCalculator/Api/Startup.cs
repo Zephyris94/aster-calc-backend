@@ -29,6 +29,8 @@ namespace Api
 
             services.AddOptions<DataSourceOptions>();
 
+            services.Configure<DataSourceOptions>(Configuration.GetSection("DataSource"));
+
             services.AddScoped<IPathFindingService, PathFindingService>();
             services.AddScoped<IGraphBuildingService, GraphBuildingService>();
             services.AddScoped<IPathFindingAlgorithm, DijkstraPathFindingAlgorithm>();
