@@ -45,7 +45,7 @@ namespace Api
                 options.AddPolicy(name: "AllowOrigin",
                     builder =>
                     {
-                        builder.WithOrigins("https://localhost:44351", "http://localhost:4200")
+                        builder.WithOrigins("https://localhost:44351", "http://localhost:4200", "https://aster-calc.vercel.app")
                             .AllowAnyHeader()
                             .AllowAnyMethod();
                     });
