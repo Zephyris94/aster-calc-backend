@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using AutoMapper;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Model.DataTransfer;
 
 namespace Api.Controllers
 {
@@ -10,24 +12,29 @@ namespace Api.Controllers
     public class NodeApiController : ControllerBase
     {
         private readonly INodeCacheService _nodeCacheService;
+        private readonly IMapper _mapper;
 
-        public NodeApiController(INodeCacheService cacheService)
+        public NodeApiController(INodeCacheService cacheService, IMapper mapper)
         {
             _nodeCacheService = cacheService;
+
+            _mapper = mapper;
         }
 
         [HttpGet("Sources")]
         [EnableCors("AllowOrigin")]
-        public List<string> Sources()
+        public List<NodeResponse> Sources()
         {
-            return _nodeCacheService.GetSources();
+            var response = _nodeCacheService.GetSources();
+            return _mapper.Map<List<NodeResponse>>(response);
         }
 
         [HttpGet("Destinations")]
         [EnableCors("AllowOrigin")]
-        public List<string> Destinations()
+        public List<NodeResponse> Destinations()
         {
-            return _nodeCacheService.GetDestinations();
+            var response = _nodeCacheService.GetDestinations();
+            return _mapper.Map<List<NodeResponse>>(response);
         }
     }
 }

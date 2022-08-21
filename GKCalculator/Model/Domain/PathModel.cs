@@ -2,9 +2,9 @@
 {
     public class PathModel
     {
-        public string Source { get; set; }
+        public NodeModel Source { get; set; }
 
-        public string Destination { get; set; }
+        public NodeModel Destination { get; set; }
 
         public int Price { get; set; }
 

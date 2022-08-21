@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using Infrastructure;
 using Infrastructure.Services;
-using Model;
-using Model.DataTransfer;
 using Model.Domain;
 
 namespace Core.Services
@@ -30,10 +28,10 @@ namespace Core.Services
 
             _pathFindingAlgorithm.InitAlgorithm(graph);
 
-            var path = _pathFindingAlgorithm.FindShortestPath(request.SourcePoint, request.Destinations[0]);
+            var path = _pathFindingAlgorithm.FindShortestPath(request.SourcePoint.Name, request.Destinations[0].Name);
             for (int i = 0; i < request.Destinations.Count - 1; i++)
             {
-                var pathChunk = _pathFindingAlgorithm.FindShortestPath(request.Destinations[i], request.Destinations[i + 1]);
+                var pathChunk = _pathFindingAlgorithm.FindShortestPath(request.Destinations[i].Name, request.Destinations[i + 1].Name);
                 path += ";" + pathChunk;
             }
 

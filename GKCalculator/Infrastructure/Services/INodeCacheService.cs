@@ -7,8 +7,8 @@ namespace Infrastructure.Services
     {
         List<PathModel> Edges { get; }
 
-        List<string> GetSources();
+        List<NodeModel> GetSources();
 
-        List<string> GetDestinations();
+        List<NodeModel> GetDestinations();
     }
 }

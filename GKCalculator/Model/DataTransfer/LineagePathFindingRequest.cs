@@ -6,7 +6,7 @@ namespace Model.DataTransfer
     {
         public string SourcePoint { get; set; }
 
-        public List<string> Destinations { get; set; }
+        public List<NodeRequest> Destinations { get; set; }
 
         public bool UseWyvern { get; set; }
 

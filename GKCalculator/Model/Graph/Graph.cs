@@ -53,8 +53,8 @@ namespace Model.Graph
         /// <param name="weight">Вес ребра соединяющего вершины</param>
         public void AddEdge(PathModel modelResponse)
         {
-            var v1 = FindVertex(modelResponse.Source);
-            var v2 = FindVertex(modelResponse.Destination);
+            var v1 = FindVertex(modelResponse.Source.Name);
+            var v2 = FindVertex(modelResponse.Destination.Name);
             if (v2 != null && v1 != null)
             {
                 v1.AddEdge(v2, modelResponse.Price, modelResponse.Type);

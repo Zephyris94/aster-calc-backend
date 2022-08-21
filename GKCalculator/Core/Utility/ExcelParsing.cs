@@ -39,8 +39,14 @@ namespace Core.Utility
                             var convertedType = GetPathType(type);
                             var newTpModel = new PathModel()
                             {
-                                Source = source,
-                                Destination = convertedType == MoveType.Paradox ? $"{destination} lv.{level}" : destination,
+                                Source = new NodeModel
+                                {
+                                    Name = source,
+                                },
+                                Destination = new NodeModel
+                                {
+                                    Name = convertedType == MoveType.Paradox ? $"{destination} lv.{level}" : destination
+                                },
                                 Price = int.Parse(Regex.Replace(price, @"\s+", "")),
                                 Type = convertedType
                             };

@@ -4,9 +4,9 @@ namespace Model.Domain
 {
     public class LineagePathFindingModel
     {
-        public string SourcePoint { get; set; }
+        public NodeModel SourcePoint { get; set; }
 
-        public List<string> Destinations { get; set; }
+        public List<NodeModel> Destinations { get; set; }
 
         public bool UseWyvern { get; set; }
 

@@ -13,8 +13,8 @@ namespace Core.Services
         private readonly object _cacheLocker = new object();
 
         private List<PathModel> _edges;
-        private List<string> _sources;
-        private List<string> _destinations;
+        private List<NodeModel> _sources;
+        private List<NodeModel> _destinations;
 
         public InMemoryNodeCacheService(IExcelParsing excelParsing)
         {
@@ -40,7 +40,7 @@ namespace Core.Services
             }
         }
 
-        public List<string> GetSources()
+        public List<NodeModel> GetSources()
         {
             if (_sources == null || _sources.Count == 0)
             {
@@ -50,7 +50,7 @@ namespace Core.Services
             return _sources;
         }
 
-        public List<string> GetDestinations()
+        public List<NodeModel> GetDestinations()
         {
             if (_sources == null || _sources.Count == 0)
             {

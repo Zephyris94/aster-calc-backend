@@ -21,7 +21,7 @@ namespace Core.Services
                 {
                     continue;
                 }
-                var edge = edges.FirstOrDefault(x => x.Source == nodes[i] && x.Destination == nodes[i + 1]);
+                var edge = edges.FirstOrDefault(x => x.Source.Name == nodes[i] && x.Destination.Name == nodes[i + 1]);
                 results.Add(edge);
             }
 
@@ -36,7 +36,7 @@ namespace Core.Services
 
             foreach (var vertex in vertexes)
             {
-                g.AddVertex(vertex);
+                g.AddVertex(vertex.Name);
             }
 
             foreach (var edge in edges)
