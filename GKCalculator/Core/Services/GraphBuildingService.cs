@@ -9,11 +9,11 @@ namespace Core.Services
 {
     public class GraphBuildingService : IGraphBuildingService
     {
-        public List<PathModel> GetResultsFromPath(List<PathModel> edges, string path)
+        public List<RouteModel> GetResultsFromPath(List<RouteModel> edges, string path)
         {
             var nodes = path.Split(";");
 
-            var results = new List<PathModel>();
+            var results = new List<RouteModel>();
 
             for (int i = 0; i < nodes.Length - 1; i++)
             {
@@ -28,7 +28,7 @@ namespace Core.Services
             return results;
         }
 
-        public Graph GetGraphFromEdges(List<PathModel> edges)
+        public Graph GetGraphFromEdges(List<RouteModel> edges)
         {
             var g = new Graph();
 
@@ -47,9 +47,9 @@ namespace Core.Services
             return g;
         }
 
-        public List<PathModel> GetRequiredEdges(List<PathModel> edges, bool useWyverns, bool useShips, bool useSoe)
+        public List<RouteModel> GetRequiredEdges(List<RouteModel> edges, bool useWyverns, bool useShips, bool useSoe)
         {
-            var workingCopy = new PathModel[edges.Count];
+            var workingCopy = new RouteModel[edges.Count];
             edges.CopyTo(workingCopy);
 
             var workingList = workingCopy.ToList();
@@ -58,30 +58,30 @@ namespace Core.Services
 
             baseQuery = useWyverns 
                 ? RemoveIntersections(baseQuery, MoveType.Wyvern, new List<MoveType>{MoveType.GK}) 
-                : baseQuery.Where(x => x.Type != MoveType.Wyvern);
+                : baseQuery.Where(x => x.MoveType != MoveType.Wyvern);
 
             baseQuery = useShips 
                 ? RemoveIntersections(baseQuery, MoveType.Ship, new List<MoveType> { MoveType.GK, MoveType.Wyvern }) 
-                : baseQuery.Where(x => x.Type != MoveType.Ship);
+                : baseQuery.Where(x => x.MoveType != MoveType.Ship);
 
             baseQuery = useSoe 
                 ? RemoveIntersections(baseQuery, MoveType.SoE, new List<MoveType> { MoveType.GK, MoveType.Wyvern }) 
-                : baseQuery.Where(x => x.Type != MoveType.SoE);
+                : baseQuery.Where(x => x.MoveType != MoveType.SoE);
 
             return baseQuery.ToList();
         }
 
-        private IEnumerable<PathModel> RemoveIntersections(IEnumerable<PathModel> workingList, MoveType preferredMoveType,
+        private IEnumerable<RouteModel> RemoveIntersections(IEnumerable<RouteModel> workingList, MoveType preferredMoveType,
             List<MoveType> excludedMoveTypes)
         {
             var list = workingList.ToList();
-            var wyvernPaths = list.Where(x => x.Type == preferredMoveType).ToList();
+            var wyvernPaths = list.Where(x => x.MoveType == preferredMoveType).ToList();
 
             for (int i = 0; i < list.Count; i++)
             {
                 if (wyvernPaths.Any(x =>
                     x.Source == list[i].Source && x.Destination == list[i].Destination) &&
-                    excludedMoveTypes.Contains(list[i].Type))
+                    excludedMoveTypes.Contains(list[i].MoveType))
                 {
                     list.RemoveAt(i);
                     i--;

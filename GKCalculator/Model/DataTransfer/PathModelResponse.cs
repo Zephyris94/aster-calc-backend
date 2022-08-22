@@ -1,4 +1,6 @@
-﻿namespace Model.DataTransfer
+﻿using Model.Domain;
+
+namespace Model.DataTransfer
 {
     public class PathModelResponse
     {

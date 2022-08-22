@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Cors;
@@ -9,31 +10,31 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class NodeApiController : ControllerBase
+    public class NodeController : ControllerBase
     {
-        private readonly INodeCacheService _nodeCacheService;
+        private readonly INodeProviderService _providerService;
         private readonly IMapper _mapper;
 
-        public NodeApiController(INodeCacheService cacheService, IMapper mapper)
+        public NodeController(INodeProviderService providerService, IMapper mapper)
         {
-            _nodeCacheService = cacheService;
+            _providerService = providerService;
 
             _mapper = mapper;
         }
 
         [HttpGet("Sources")]
         [EnableCors("AllowOrigin")]
-        public List<NodeResponse> Sources()
+        public async Task<List<NodeResponse>> Sources()
         {
-            var response = _nodeCacheService.GetSources();
+            var response = await _providerService.GetSources();
             return _mapper.Map<List<NodeResponse>>(response);
         }
 
         [HttpGet("Destinations")]
         [EnableCors("AllowOrigin")]
-        public List<NodeResponse> Destinations()
+        public async Task<List<NodeResponse>> Destinations()
         {
-            var response = _nodeCacheService.GetDestinations();
+            var response = await _providerService.GetDestinations();
             return _mapper.Map<List<NodeResponse>>(response);
         }
     }

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Model.Domain;
 
 namespace Infrastructure.Services
 {
     public interface IPathFindingService
     {
-        List<PathModel> FindPath(LineagePathFindingModel request);
+        Task<List<RouteModel>> FindPath(LineagePathFindingModel request);
     }
 }

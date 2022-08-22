@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Model.Domain;
+using System.Collections.Generic;
 
 namespace Model.Graph
 {

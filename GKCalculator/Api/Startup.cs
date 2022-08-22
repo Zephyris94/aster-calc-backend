@@ -1,13 +1,16 @@
-using Api.MappingProfiles;
 using Core;
 using Core.Services;
 using Core.Settings;
 using Core.Utility;
+using DataAccess;
+using DataAccess.Repositories;
 using Infrastructure;
+using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Infrastructure.Utility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,11 +37,21 @@ namespace Api
 
             services.AddAutoMapper(typeof(Startup));
 
+            services.AddScoped<IRouteRepository, RouteRepository>();
+            services.AddScoped<ICalculationRepository, CalculationRepository>();
+
             services.AddScoped<IPathFindingService, PathFindingService>();
             services.AddScoped<IGraphBuildingService, GraphBuildingService>();
+            services.AddScoped<INodeProviderService, NodeProviderService>();
             services.AddScoped<IPathFindingAlgorithm, DijkstraPathFindingAlgorithm>();
+
             services.AddSingleton<INodeCacheService, InMemoryNodeCacheService>();
             services.AddSingleton<IExcelParsing, ExcelParsing>();
+
+            services.AddDbContext<ApplicationContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection"),
+                    b => b.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
 
             services.AddCors(options =>
             {
@@ -52,14 +65,18 @@ namespace Api
             });
 
             services.AddControllers();
+
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationContext dataContext)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
@@ -76,6 +93,9 @@ namespace Api
             {
                 endpoints.MapControllers();
             });
+
+            dataContext.Database.Migrate();
+            dataContext.VerifyEnums();
         }
     }
 }

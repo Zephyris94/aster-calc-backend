@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DataAccess.Models
+namespace Model.Domain
 {
-    public class Calculation
+    public class CalculationModel
     {
         public int Id { get; set; }
 
@@ -15,6 +15,6 @@ namespace DataAccess.Models
 
         public bool UseSoe { get; set; }
 
-        public virtual ICollection<Route> Routes { get; set; }
+        public List<RouteModel> Routes { get; set; }
     }
 }

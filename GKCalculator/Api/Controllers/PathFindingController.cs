@@ -11,17 +11,17 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PathFindingApiController : ControllerBase
+    public class PathFindingController : ControllerBase
     {
-        private readonly ILogger<PathFindingApiController> _logger;
+        private readonly ILogger<PathFindingController> _logger;
 
         private readonly IMapper _mapper;
         private readonly IPathFindingService _pathFindingService;
 
-        public PathFindingApiController(
+        public PathFindingController(
             IPathFindingService pathFindingService,
             IMapper mapper,
-            ILogger<PathFindingApiController> logger)
+            ILogger<PathFindingController> logger)
         { 
             _logger = logger;
             _mapper = mapper;

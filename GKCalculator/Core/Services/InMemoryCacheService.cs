@@ -1,42 +1,61 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Infrastructure.Services;
-using Infrastructure.Utility;
 using Model.Domain;
 
 namespace Core.Services
 {
     public class InMemoryNodeCacheService : INodeCacheService
     {
-        private readonly IExcelParsing _excelParsing;
-
         private readonly object _cacheLocker = new object();
+        private readonly object _sourceLocker = new object();
+        private readonly object _destLocker = new object();
 
-        private List<PathModel> _edges;
+        private List<RouteModel> _routes;
         private List<NodeModel> _sources;
         private List<NodeModel> _destinations;
 
-        public InMemoryNodeCacheService(IExcelParsing excelParsing)
+        public void Set(List<RouteModel> routes)
         {
-            _excelParsing = excelParsing;
-        }
-
-        public List<PathModel> Edges
-        {
-            get
+            if (_routes == null)
             {
-                if (_edges == null)
+                lock (_cacheLocker)
                 {
-                    lock (_cacheLocker)
+                    if (_routes == null)
                     {
-                        if (_edges == null)
-                        {
-                            _edges = _excelParsing.ParseExcel();
-                        }
+                        _routes = routes;
                     }
                 }
+            }
+        }
 
-                return _edges;
+        public async Task<List<RouteModel>> GetOrCreateRoutes(Func<Task<List<RouteModel>>> creationDelegate)
+        {
+            if (_routes == null)
+            {
+                var routes = await creationDelegate();
+                lock (_cacheLocker)
+                {
+                    if (_routes == null)
+                    {
+                        _routes = routes;
+                    }
+                }
+            }
+
+            lock (_cacheLocker)
+            {
+                return _routes;
+            }
+        }
+
+        public List<RouteModel> GetRoutes()
+        {
+            lock (_cacheLocker)
+            {
+                return _routes;
             }
         }
 
@@ -44,7 +63,14 @@ namespace Core.Services
         {
             if (_sources == null || _sources.Count == 0)
             {
-                InitSources();
+                var source = GetRoutes()?.Select(x => x.Source).Distinct().ToList();
+                lock (_sourceLocker)
+                {
+                    if (_sources == null)
+                    {
+                        _sources = source;
+                    }
+                }
             }
 
             return _sources;
@@ -52,21 +78,19 @@ namespace Core.Services
 
         public List<NodeModel> GetDestinations()
         {
-            if (_sources == null || _sources.Count == 0)
+            if (_destinations == null || _destinations.Count == 0)
             {
-                InitDestinations();
+                var destinations = GetRoutes()?.Select(x => x.Destination).Distinct().ToList();
+                lock (_destLocker)
+                {
+                    if (_destinations == null)
+                    {
+                        _destinations = destinations;
+                    }
+                }
             }
 
             return _destinations;
-        }
-        private void InitSources()
-        {
-            _sources = Edges.Select(x => x.Source).Distinct().ToList();
-        }
-
-        private void InitDestinations()
-        {
-            _destinations = Edges.Select(x => x.Source).Union(Edges.Select(x => x.Destination)).Distinct().ToList();
         }
     }
 }

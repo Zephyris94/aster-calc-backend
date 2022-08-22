@@ -6,10 +6,10 @@ namespace Infrastructure.Services
 {
     public interface IGraphBuildingService
     {
-        Graph GetGraphFromEdges(List<PathModel> edges);
+        Graph GetGraphFromEdges(List<RouteModel> edges);
 
-        List<PathModel> GetRequiredEdges(List<PathModel> edges, bool useWyverns, bool useShips, bool useSoe);
+        List<RouteModel> GetRequiredEdges(List<RouteModel> edges, bool useWyverns, bool useShips, bool useSoe);
 
-        List<PathModel> GetResultsFromPath(List<PathModel> edges, string path);
+        List<RouteModel> GetResultsFromPath(List<RouteModel> edges, string path);
     }
 }

@@ -19,10 +19,10 @@ namespace Core.Utility
             _excelFilePath = dataSourceOptions.Value.ExcelPath;
         }
 
-        public List<PathModel> ParseExcel()
+        public List<RouteModel> ParseExcel()
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            var models = new List<PathModel>();
+            var models = new List<RouteModel>();
             using (var stream = File.Open(_excelFilePath, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
@@ -37,7 +37,7 @@ namespace Core.Utility
                             var price = reader.GetValue(3).ToString().Replace(" ","");
                             var type = reader.GetValue(4).ToString();
                             var convertedType = GetPathType(type);
-                            var newTpModel = new PathModel()
+                            var newTpModel = new RouteModel()
                             {
                                 Source = new NodeModel
                                 {
@@ -48,7 +48,7 @@ namespace Core.Utility
                                     Name = convertedType == MoveType.Paradox ? $"{destination} lv.{level}" : destination
                                 },
                                 Price = int.Parse(Regex.Replace(price, @"\s+", "")),
-                                Type = convertedType
+                                MoveType = convertedType
                             };
                             models.Add(newTpModel);
                         }

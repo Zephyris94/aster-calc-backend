@@ -5,6 +5,6 @@ namespace Infrastructure.Utility
 {
     public interface IExcelParsing
     {
-        List<PathModel> ParseExcel();
+        List<RouteModel> ParseExcel();
     }
 }

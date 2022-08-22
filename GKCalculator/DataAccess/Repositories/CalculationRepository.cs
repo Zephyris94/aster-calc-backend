@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
+using DataAccess.Models;
 using Infrastructure.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Model.Domain;
 using System.Threading.Tasks;
 
-namespace DataAccess
+namespace DataAccess.Repositories
 {
     public class CalculationRepository : ICalculationRepository
     {
@@ -19,6 +17,13 @@ namespace DataAccess
             _mapper = mapper;
         }
 
-        
+        public async Task SaveCalculation(CalculationModel calculation)
+        {
+            var calculationDao = _mapper.Map<Calculation>(calculation);
+
+            await _context.Calculations.AddAsync(calculationDao);
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

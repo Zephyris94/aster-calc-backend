@@ -1,4 +1,4 @@
-﻿namespace Model
+﻿namespace Model.Domain
 {
     public enum MoveType
     {

@@ -51,13 +51,13 @@ namespace Model.Graph
         /// <param name="firstName">Имя первой вершины</param>
         /// <param name="secondName">Имя второй вершины</param>
         /// <param name="weight">Вес ребра соединяющего вершины</param>
-        public void AddEdge(PathModel modelResponse)
+        public void AddEdge(RouteModel modelResponse)
         {
             var v1 = FindVertex(modelResponse.Source.Name);
             var v2 = FindVertex(modelResponse.Destination.Name);
             if (v2 != null && v1 != null)
             {
-                v1.AddEdge(v2, modelResponse.Price, modelResponse.Type);
+                v1.AddEdge(v2, modelResponse.Price, modelResponse.MoveType);
             }
         }
     }

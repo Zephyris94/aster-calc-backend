@@ -10,6 +10,10 @@ namespace DataAccess.Models
 
         public Node Destination { get; set; }
 
+        public int Price { get; set; }
+
+        public MoveType MoveType { get; set; }
+
         public virtual ICollection<Calculation> Calculations { get; set; }
     }
 }

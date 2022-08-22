@@ -1,4 +1,6 @@
-﻿namespace Model.Graph
+﻿using Model.Domain;
+
+namespace Model.Graph
 {
     public class GraphEdge
     {
