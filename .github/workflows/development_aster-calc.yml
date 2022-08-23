@@ -25,11 +25,6 @@ jobs:
       - name: Build with dotnet
         run: dotnet build --configuration Release GKCalculator/GKCalculator.sln
         
-      - name: debug step
-        run: cd ${{env.DOTNET_ROOT}}
-      
-      - name: debug step 2
-        run: dir /b 
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/GKCalculator/Api
