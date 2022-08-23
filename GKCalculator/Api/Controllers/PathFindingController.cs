@@ -38,8 +38,8 @@ namespace Api.Controllers
         public async Task<LineagePathFindingResponse> Post(LineagePathFindingRequest request)
         {
             var requestModel = _mapper.Map<LineagePathFindingModel>(request);
-            requestModel.SourcePoint = await _nodeProviderService.GetSourceById(request.SourcePointId);
-            requestModel.Destinations = await _nodeProviderService.GetDestinationListByIds(request.DestinationIds);
+            requestModel.SourcePoint = await _nodeProviderService.GetSourceById(request.SourcePoint);
+            requestModel.Destinations = await _nodeProviderService.GetDestinationListByIds(request.Destinations);
 
             var defaultRequestModel = CreateDefaultRequest(requestModel);
 

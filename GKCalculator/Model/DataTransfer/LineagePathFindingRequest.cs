@@ -4,9 +4,9 @@ namespace Model.DataTransfer
 {
     public class LineagePathFindingRequest
     {
-        public int SourcePointId { get; set; }
+        public int SourcePoint { get; set; }
 
-        public List<int> DestinationIds { get; set; }
+        public List<int> Destinations { get; set; }
 
         public bool UseWyvern { get; set; }
 
