@@ -24,15 +24,21 @@ jobs:
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
+        
+      - name: debug step
+        run: cd ${{env.DOTNET_ROOT}}
+      
+      - name: debug step 2
+        run: dir /b 
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/GKCalculator
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/GKCalculator/GKCalculator.sln
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/GKCalculator
+          path: ${{env.DOTNET_ROOT}}/GKCalculator/GKCalculator.sln
 
   deploy:
     runs-on: windows-latest
