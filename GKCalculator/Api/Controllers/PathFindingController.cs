@@ -18,11 +18,11 @@ namespace Api.Controllers
 
         private readonly IMapper _mapper;
         private readonly IPathFindingService _pathFindingService;
-        private readonly INodeProviderService _nodeProviderService;
+        private readonly IRouteProviderService _nodeProviderService;
 
         public PathFindingController(
             IPathFindingService pathFindingService,
-            INodeProviderService nodeProviderService,
+            IRouteProviderService nodeProviderService,
             IMapper mapper,
             ILogger<PathFindingController> logger)
         { 

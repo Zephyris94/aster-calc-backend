@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace Core.Services
 {
-    public class NodeProviderService : INodeProviderService
+    public class RouteProviderService : IRouteProviderService
     {
         private readonly INodeCacheService _cacheService;
         private readonly IRouteRepository _routeRepo;
 
         private readonly bool _useCache;
 
-        public NodeProviderService(
+        public RouteProviderService(
             INodeCacheService cacheService,
             IRouteRepository routeRepo,
             IOptions<DataSourceOptions> dataSettings)
@@ -46,6 +46,18 @@ namespace Core.Services
             }
 
             return await _routeRepo.GetNodes((int)NodeType.Destination);
+        }
+
+        public async Task<List<RouteModel>> GetRoutes()
+        {
+            if (_useCache)
+            {
+                return await _cacheService.GetOrCreateRoutes(async () => await _routeRepo.GetRoutes());
+            }
+            else
+            {
+                return await _routeRepo.GetRoutes();
+            }
         }
 
         public async Task<NodeModel> GetSourceById(int id)

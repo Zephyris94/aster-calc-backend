@@ -12,10 +12,10 @@ namespace Api.Controllers
     [Route("api/[controller]")]
     public class NodeController : ControllerBase
     {
-        private readonly INodeProviderService _providerService;
+        private readonly IRouteProviderService _providerService;
         private readonly IMapper _mapper;
 
-        public NodeController(INodeProviderService providerService, IMapper mapper)
+        public NodeController(IRouteProviderService providerService, IMapper mapper)
         {
             _providerService = providerService;
 

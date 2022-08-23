@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
-    public interface INodeProviderService
+    public interface IRouteProviderService
     {
         Task<NodeModel> GetSourceById(int id);
 
@@ -13,5 +13,7 @@ namespace Infrastructure.Services
         Task<List<NodeModel>> GetSources();
 
         Task<List<NodeModel>> GetDestinations();
+
+        Task<List<RouteModel>> GetRoutes();
     }
 }

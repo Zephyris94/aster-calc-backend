@@ -22,34 +22,7 @@ namespace Core.Services
             _repo = repo;
         }
 
-        public void SeedData()
-        {
-            if (_repo.GetRoutes().ConfigureAwait(false).GetAwaiter().GetResult().Any())
-            {
-                return;
-            }
-
-            var routes = _excelParsing.ParseExcel();
-            var nodes = routes.Select(x => x.Source)
-                .Distinct()
-                .ToList();
-            nodes.AddRange(routes.Select(y => y.Destination).Distinct());
-
-            _repo.RegisterNodes(nodes).ConfigureAwait(false).GetAwaiter().GetResult();
-
-            var sources = _repo.GetNodes((int)NodeType.Source).ConfigureAwait(false).GetAwaiter().GetResult();
-            var destinations = _repo.GetNodes((int)NodeType.Destination).ConfigureAwait(false).GetAwaiter().GetResult();
-
-            foreach (var route in routes)
-            {
-                route.Source = sources.FirstOrDefault(x => string.Compare(route.Source.Name, x.Name, StringComparison.OrdinalIgnoreCase) == 0);
-                route.Destination = destinations.FirstOrDefault(x => string.Compare(route.Destination.Name, x.Name, StringComparison.OrdinalIgnoreCase) == 0);
-            }
-
-            _repo.RegisterRoutes(routes).ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-
-        public async Task SeedDataAsync()
+        public async Task SeedData()
         {
             if((await _repo.GetRoutes()).Any())
             {

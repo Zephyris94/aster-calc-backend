@@ -42,7 +42,7 @@ namespace Api
 
             services.AddScoped<IPathFindingService, PathFindingService>();
             services.AddScoped<IGraphBuildingService, GraphBuildingService>();
-            services.AddScoped<INodeProviderService, NodeProviderService>();
+            services.AddScoped<IRouteProviderService, RouteProviderService>();
             services.AddScoped<IPathFindingAlgorithm, DijkstraPathFindingAlgorithm>();
             services.AddScoped<IDataMigrationService, ExcelDataMigrationService>();
 

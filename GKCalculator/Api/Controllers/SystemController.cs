@@ -20,7 +20,7 @@ namespace Api.Controllers
         [EnableCors("AllowOrigin")]
         public async Task<IActionResult> Sources()
         {
-            await _dataMigrationService.SeedDataAsync();
+            await _dataMigrationService.SeedData();
             return Ok();
         }
     }
