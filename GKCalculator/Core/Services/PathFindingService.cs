@@ -11,7 +11,6 @@ namespace Core.Services
     public class PathFindingService : IPathFindingService
     {
         private readonly IGraphBuildingService _graphBuildingService;
-        private readonly INodeCacheService _cacheService;
         private readonly IPathFindingAlgorithm _pathFindingAlgorithm;
         private readonly IRouteProviderService _routeProviderService;
 
@@ -19,13 +18,11 @@ namespace Core.Services
 
         public PathFindingService(
             IGraphBuildingService graphBuildingService,
-            INodeCacheService cacheService,
             IPathFindingAlgorithm pathFindingAloAlgorithm,
             IRouteProviderService routeProviderService,
             IOptions<DataSourceOptions> dataSettings)
         {
             _graphBuildingService = graphBuildingService;
-            _cacheService = cacheService;
             _pathFindingAlgorithm = pathFindingAloAlgorithm;
             _routeProviderService = routeProviderService;
 
