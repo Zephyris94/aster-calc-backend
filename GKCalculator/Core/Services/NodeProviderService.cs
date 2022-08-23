@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Model.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Core.Services
@@ -27,6 +28,16 @@ namespace Core.Services
             _useCache = dataSettings.Value.UseCache;
         }
 
+        public async Task<List<NodeModel>> GetDestinationListByIds(List<int> ids)
+        {
+            if (_useCache)
+            {
+                return (await GetFromCache(() => _cacheService.GetDestinations())).Where(x => ids.Contains(x.Id)).ToList();
+            }
+
+            return await _routeRepo.GetNodesById(ids);
+        }
+
         public async Task<List<NodeModel>> GetDestinations()
         {
             if(_useCache)
@@ -35,6 +46,16 @@ namespace Core.Services
             }
 
             return await _routeRepo.GetNodes((int)NodeType.Destination);
+        }
+
+        public async Task<NodeModel> GetSourceById(int id)
+        {
+            if (_useCache)
+            {
+                return (await GetFromCache(() => _cacheService.GetSources())).FirstOrDefault(x => x.Id == id);
+            }
+
+            return await _routeRepo.GetNodeById(id);
         }
 
         public async Task<List<NodeModel>> GetSources()

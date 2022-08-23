@@ -29,10 +29,18 @@ namespace DataAccess
             builder.Entity<Node>()
                 .HasKey(x => x.Id);
             builder.Entity<Node>()
+                .Property(x => x.Id).UseIdentityColumn();
+            builder.Entity<Node>()
+                .Property(x => x.Id).ValueGeneratedOnAdd();
+            builder.Entity<Node>()
                 .HasOne(x => x.NodeType);
 
             builder.Entity<Route>()
                 .HasKey(x => x.Id);
+            builder.Entity<Route>()
+                .Property(x => x.Id).UseIdentityColumn();
+            builder.Entity<Route>()
+               .Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Entity<Route>()
                 .HasOne(x => x.Destination);
             builder.Entity<Route>()
@@ -79,7 +87,7 @@ namespace DataAccess
             System.Type enumType = typeof(TEnum);
             System.Array enumValues = System.Enum.GetValues(enumType);
 
-            for (int i = 1; i < enumValues.Length; i++)
+            for (int i = 0; i < enumValues.Length; i++)
             {
                 // Retrieve the value of the ith enum item.
                 string value = enumValues.GetValue(i).ToString();

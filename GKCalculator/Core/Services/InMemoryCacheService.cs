@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Utility;
 using Infrastructure.Services;
 using Model.Domain;
 
@@ -63,7 +64,7 @@ namespace Core.Services
         {
             if (_sources == null || _sources.Count == 0)
             {
-                var source = GetRoutes()?.Select(x => x.Source).Distinct().ToList();
+                var source = GetRoutes()?.Select(x => x.Source).DistinctBy(x => x.Id).ToList();
                 lock (_sourceLocker)
                 {
                     if (_sources == null)
@@ -80,7 +81,7 @@ namespace Core.Services
         {
             if (_destinations == null || _destinations.Count == 0)
             {
-                var destinations = GetRoutes()?.Select(x => x.Destination).Distinct().ToList();
+                var destinations = GetRoutes()?.Select(x => x.Destination).DistinctBy(x => x.Id).ToList();
                 lock (_destLocker)
                 {
                     if (_destinations == null)

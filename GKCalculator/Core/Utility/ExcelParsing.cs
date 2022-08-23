@@ -42,10 +42,12 @@ namespace Core.Utility
                                 Source = new NodeModel
                                 {
                                     Name = source,
+                                    NodeType = NodeType.Source
                                 },
                                 Destination = new NodeModel
                                 {
-                                    Name = convertedType == MoveType.Paradox ? $"{destination} lv.{level}" : destination
+                                    Name = convertedType == MoveType.Paradox ? $"{destination} lv.{level}" : destination,
+                                    NodeType = NodeType.Destination
                                 },
                                 Price = int.Parse(Regex.Replace(price, @"\s+", "")),
                                 MoveType = convertedType

@@ -37,11 +37,11 @@ namespace Core.Services
         {
             if (_useCache)
             {
-                var routes = _cacheService.GetOrCreateRoutes(async () => await _routeRepo.GetRoutes());
+                var routes = await _cacheService.GetOrCreateRoutes(async () => await _routeRepo.GetRoutes());
             }
             else
             {
-                var routes = _routeRepo.GetRoutes();
+                var routes = await _routeRepo.GetRoutes();
             }
 
             var edges = _graphBuildingService.GetRequiredEdges(_cacheService.GetRoutes(), request.UseWyvern, request.UseShips, request.UseSoe);

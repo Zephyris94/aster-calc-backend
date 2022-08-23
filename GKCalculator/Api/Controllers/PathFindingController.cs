@@ -6,6 +6,7 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Cors;
 using Model.DataTransfer;
 using Model.Domain;
+using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
@@ -17,9 +18,11 @@ namespace Api.Controllers
 
         private readonly IMapper _mapper;
         private readonly IPathFindingService _pathFindingService;
+        private readonly INodeProviderService _nodeProviderService;
 
         public PathFindingController(
             IPathFindingService pathFindingService,
+            INodeProviderService nodeProviderService,
             IMapper mapper,
             ILogger<PathFindingController> logger)
         { 
@@ -27,28 +30,34 @@ namespace Api.Controllers
             _mapper = mapper;
 
             _pathFindingService = pathFindingService;
+            _nodeProviderService = nodeProviderService;
         }
 
         [HttpPost("Calculate")]
         [EnableCors("AllowOrigin")]
-        public LineagePathFindingResponse Post(LineagePathFindingRequest request)
+        public async Task<LineagePathFindingResponse> Post(LineagePathFindingRequest request)
         {
-            var defaultRequestModel = _mapper.Map<LineagePathFindingModel>(CreateDefaultRequest(request));
             var requestModel = _mapper.Map<LineagePathFindingModel>(request);
+            requestModel.SourcePoint = await _nodeProviderService.GetSourceById(request.SourcePointId);
+            requestModel.Destinations = await _nodeProviderService.GetDestinationListByIds(request.DestinationIds);
 
-            var defaultResults = _pathFindingService.FindPath(defaultRequestModel);
-            var results = _pathFindingService.FindPath(requestModel);
+            var defaultRequestModel = CreateDefaultRequest(requestModel);
+
+            var resultTask = _pathFindingService.FindPath(requestModel);
+            var defaultResultTask = _pathFindingService.FindPath(defaultRequestModel);
+
+            await Task.WhenAll(resultTask, defaultResultTask);
 
             return new LineagePathFindingResponse
             {
-                DefaultPath = _mapper.Map<List<PathModelResponse>>(defaultResults),
-                CustomPath = _mapper.Map<List<PathModelResponse>>(results),
+                DefaultPath = _mapper.Map<List<PathModelResponse>>(defaultResultTask.Result),
+                CustomPath = _mapper.Map<List<PathModelResponse>>(resultTask.Result),
             };
         }
 
-        private LineagePathFindingRequest CreateDefaultRequest(LineagePathFindingRequest prototype)
+        private LineagePathFindingModel CreateDefaultRequest(LineagePathFindingModel prototype)
         {
-            return new LineagePathFindingRequest
+            return new LineagePathFindingModel
             {
                 Destinations = prototype.Destinations,
                 SourcePoint = prototype.SourcePoint,

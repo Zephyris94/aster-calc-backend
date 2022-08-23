@@ -2,7 +2,6 @@
 using DataAccess.Models;
 using Model.DataTransfer;
 using Model.Domain;
-using System;
 
 namespace Api.MappingProfiles
 {
@@ -15,8 +14,12 @@ namespace Api.MappingProfiles
 
         public void AddMapping()
         {
-            CreateMap<LineagePathFindingRequest, LineagePathFindingModel>().ReverseMap();
-            CreateMap<PathModelResponse, RouteModel>().ReverseMap();
+            CreateMap<LineagePathFindingRequest, LineagePathFindingModel>()
+                .ForMember(dest => dest.SourcePoint, opt => opt.Ignore())
+                .ForMember(dest => dest.Destinations, opt => opt.Ignore());
+            CreateMap<RouteModel, PathModelResponse>()
+                .ForMember(dest => dest.Source, src => src.MapFrom(x => x.Source.Name))
+                .ForMember(dest => dest.Destination, src => src.MapFrom(x => x.Destination.Name));
 
             CreateMap<NodeRequest, NodeModel>();
             CreateMap<NodeModel, NodeResponse>();

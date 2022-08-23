@@ -32,7 +32,7 @@ namespace Core.Services
         {
             var g = new Graph();
 
-            var vertexes = edges.Select(x => x.Source).Union(edges.Select(x => x.Destination)).Distinct();
+            var vertexes = edges.Select(x => x.Source).Union(edges.Select(x => x.Destination)).DistinctBy(x => x.Id);
 
             foreach (var vertex in vertexes)
             {

@@ -13,5 +13,9 @@ namespace Infrastructure.Repositories
         Task<List<RouteModel>> GetRoutes();
 
         Task<List<NodeModel>> GetNodes(int edgeTypeId);
+
+        Task<NodeModel> GetNodeById(int id);
+
+        Task<List<NodeModel>> GetNodesById(List<int> ids);
     }
 }

@@ -44,6 +44,7 @@ namespace Api
             services.AddScoped<IGraphBuildingService, GraphBuildingService>();
             services.AddScoped<INodeProviderService, NodeProviderService>();
             services.AddScoped<IPathFindingAlgorithm, DijkstraPathFindingAlgorithm>();
+            services.AddScoped<IDataMigrationService, ExcelDataMigrationService>();
 
             services.AddSingleton<INodeCacheService, InMemoryNodeCacheService>();
             services.AddSingleton<IExcelParsing, ExcelParsing>();
