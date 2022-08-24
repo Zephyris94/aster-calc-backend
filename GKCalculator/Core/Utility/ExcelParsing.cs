@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Core.Settings;
@@ -19,7 +20,46 @@ namespace Core.Utility
             _excelFilePath = dataSourceOptions.Value.ExcelPath;
         }
 
-        public List<RouteModel> ParseExcel()
+        public List<RouteModel> ParseExcelFromStream(MemoryStream ms)
+        {
+            var models = new List<RouteModel>();
+            using (var reader = ExcelReaderFactory.CreateReader(ms))
+            {
+                do
+                {
+                    while (reader.Read()) //Each ROW
+                    {
+                        var source = reader.GetValue(0).ToString();
+                        var destination = reader.GetValue(1).ToString();
+                        var level = reader.GetValue(2)?.ToString();
+                        var price = reader.GetValue(3).ToString().Replace(" ", "");
+                        var type = reader.GetValue(4).ToString();
+                        var convertedType = GetPathType(type);
+                        var newTpModel = new RouteModel()
+                        {
+                            Source = new NodeModel
+                            {
+                                Name = source,
+                                NodeType = NodeType.Source
+                            },
+                            Destination = new NodeModel
+                            {
+                                Name = convertedType == MoveType.Paradox ? $"{destination} lv.{level}" : destination,
+                                NodeType = NodeType.Destination
+                            },
+                            Price = int.Parse(Regex.Replace(price, @"\s+", "")),
+                            MoveType = convertedType
+                        };
+                        models.Add(newTpModel);
+                    }
+                } while (reader.NextResult()); //Move to NEXT SHEET
+            }
+
+            return models;
+        }
+
+        [Obsolete]
+        public List<RouteModel> ParseExcelFromFile()
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             var models = new List<RouteModel>();

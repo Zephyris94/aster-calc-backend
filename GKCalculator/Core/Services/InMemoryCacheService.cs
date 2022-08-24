@@ -19,11 +19,11 @@ namespace Core.Services
 
         public void Set(List<RouteModel> routes)
         {
-            if (_routes == null)
+            if (_routes == null || _routes.Count == 0)
             {
                 lock (_cacheLocker)
                 {
-                    if (_routes == null)
+                    if (_routes == null || _routes.Count == 0)
                     {
                         _routes = routes;
                     }
@@ -33,12 +33,12 @@ namespace Core.Services
 
         public async Task<List<RouteModel>> GetOrCreateRoutes(Func<Task<List<RouteModel>>> creationDelegate)
         {
-            if (_routes == null)
+            if (_routes == null || _routes.Count == 0)
             {
                 var routes = await creationDelegate();
                 lock (_cacheLocker)
                 {
-                    if (_routes == null)
+                    if (_routes == null || _routes.Count == 0)
                     {
                         _routes = routes;
                     }
@@ -66,7 +66,7 @@ namespace Core.Services
                 var source = GetRoutes()?.Select(x => x.Source).DistinctBy(x => x.Id).ToList();
                 lock (_sourceLocker)
                 {
-                    if (_sources == null)
+                    if (_sources == null || _sources.Count == 0)
                     {
                         _sources = source;
                     }
@@ -83,7 +83,7 @@ namespace Core.Services
                 var destinations = GetRoutes()?.Select(x => x.Destination).DistinctBy(x => x.Id).ToList();
                 lock (_destLocker)
                 {
-                    if (_destinations == null)
+                    if (_destinations == null || _destinations.Count == 0)
                     {
                         _destinations = destinations;
                     }

@@ -1,3 +1,4 @@
+using Api.ConfigurationExcensions;
 using Core;
 using Core.Services;
 using Core.Settings;
@@ -11,6 +12,7 @@ using Infrastructure.Utility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,39 +33,17 @@ namespace Api
         {
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddOptions<DataSourceOptions>();
+            services.ConfigureOptions(Configuration);
 
-            services.Configure<DataSourceOptions>(Configuration.GetSection("DataSource"));
+            services.ConfigureDomainServices();
 
-            services.AddAutoMapper(typeof(Startup));
+            services.ConfigureDataAccessRepositories();
 
-            services.AddScoped<IRouteRepository, RouteRepository>();
-            services.AddScoped<ICalculationRepository, CalculationRepository>();
+            services.ConfigureDatabase(Configuration);
 
-            services.AddScoped<IPathFindingService, PathFindingService>();
-            services.AddScoped<IGraphBuildingService, GraphBuildingService>();
-            services.AddScoped<IRouteProviderService, RouteProviderService>();
-            services.AddScoped<IPathFindingAlgorithm, DijkstraPathFindingAlgorithm>();
-            services.AddScoped<IDataMigrationService, ExcelDataMigrationService>();
+            services.ConfigureAzureServices(Configuration);
 
-            services.AddSingleton<INodeCacheService, InMemoryNodeCacheService>();
-            services.AddSingleton<IExcelParsing, ExcelParsing>();
-
-            services.AddDbContext<ApplicationContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"),
-                    b => b.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
-
-            services.AddCors(options =>
-            {
-                options.AddPolicy(name: "AllowOrigin",
-                    builder =>
-                    {
-                        builder.WithOrigins("https://localhost:44351", "http://localhost:4200", "https://aster-calc.vercel.app")
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                    });
-            });
+            services.AddCors(Configuration);
 
             services.AddControllers();
 
