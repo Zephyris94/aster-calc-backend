@@ -54,5 +54,5 @@ jobs:
         with:
           app-name: 'aster-calc'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_78A6184493AA4DCEBE819B8FDF4DB498 }}
+          publish-profile: ${{ secrets.AZURE_CREDENTIALS }}
           package: .
