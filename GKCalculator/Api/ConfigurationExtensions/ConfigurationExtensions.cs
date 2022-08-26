@@ -1,4 +1,6 @@
-﻿using Core;
+﻿using Azure.Core;
+using Azure.Identity;
+using Core;
 using Core.Services;
 using Core.Settings;
 using Core.Utility;
@@ -12,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Api.ConfigurationExcensions
 {
@@ -40,7 +43,7 @@ namespace Api.ConfigurationExcensions
         {
             services.AddAzureClients(builder =>
             {
-                builder.AddBlobServiceClient(configuration.GetConnectionString("AzureConnectionString"));
+                builder.AddBlobServiceClient(configuration.GetConnectionString("AzureBlobStorageString"));
             });
         }
 
@@ -48,7 +51,7 @@ namespace Api.ConfigurationExcensions
         {
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(
-                    configuration.GetConnectionString("DefaultConnection"),
+                    configuration.GetConnectionString("AzureSqlConnection"),
                     b => b.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
         }
 

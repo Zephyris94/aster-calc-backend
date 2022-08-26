@@ -4,6 +4,7 @@ using AutoMapper;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Model.DataTransfer;
 
 namespace Api.Controllers
@@ -15,10 +16,11 @@ namespace Api.Controllers
         private readonly IRouteProviderService _providerService;
         private readonly IMapper _mapper;
 
-        public NodeController(IRouteProviderService providerService, IMapper mapper)
+        public NodeController(
+            IRouteProviderService providerService,
+            IMapper mapper)
         {
             _providerService = providerService;
-
             _mapper = mapper;
         }
 

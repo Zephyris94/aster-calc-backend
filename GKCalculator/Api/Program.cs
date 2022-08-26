@@ -1,5 +1,14 @@
+using Azure.Identity;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.WindowsAzure.Storage.Auth;
+using NLog;
+using NLog.Extensions.Logging;
+using NLog.Web;
+using System;
+using System.Reflection;
 
 namespace Api
 {
@@ -7,7 +16,21 @@ namespace Api
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            try
+            {
+                var builder = CreateHostBuilder(args);
+
+                builder.Build().Run();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+                LogManager.Shutdown();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -15,6 +38,14 @@ namespace Api
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                }).ConfigureAppConfiguration((context, builder) =>
+                {
+                    builder.AddUserSecrets(Assembly.GetExecutingAssembly(), true);
+                }).ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+                })
+                .UseNLog();
     }
 }

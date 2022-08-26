@@ -16,6 +16,9 @@ using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NLog;
+using NLog.Extensions.Logging;
+using NLog.Web;
 
 namespace Api
 {
@@ -56,6 +59,7 @@ namespace Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                dataContext.Database.Migrate();
             }
 
             app.UseSwagger();
@@ -76,7 +80,6 @@ namespace Api
                 endpoints.MapControllers();
             });
 
-            dataContext.Database.Migrate();
             dataContext.VerifyEnums();
         }
     }

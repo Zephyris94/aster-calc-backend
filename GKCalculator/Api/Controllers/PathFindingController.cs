@@ -37,6 +37,8 @@ namespace Api.Controllers
         [EnableCors("AllowOrigin")]
         public async Task<LineagePathFindingResponse> Post(LineagePathFindingRequest request)
         {
+            _logger.LogInformation("Calculation requested", request);
+
             var requestModel = _mapper.Map<LineagePathFindingModel>(request);
             requestModel.SourcePoint = await _nodeProviderService.GetSourceById(request.SourcePoint);
             requestModel.Destinations = await _nodeProviderService.GetDestinationListByIds(request.Destinations);
@@ -47,6 +49,8 @@ namespace Api.Controllers
             var defaultResultTask = _pathFindingService.FindPath(defaultRequestModel);
 
             await Task.WhenAll(resultTask, defaultResultTask);
+
+            _logger.LogInformation("Calculation succeeded", request);
 
             return new LineagePathFindingResponse
             {
