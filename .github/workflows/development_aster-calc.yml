@@ -19,21 +19,20 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '3.1.301'
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release GKCalculator/GKCalculator.sln
-        
+        run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release GKCalculator -o ${{env.DOTNET_ROOT}}\GKCalculator
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}\GKCalculator 
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     runs-on: windows-latest
@@ -54,5 +53,5 @@ jobs:
         with:
           app-name: 'aster-calc'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_78A6184493AA4DCEBE819B8FDF4DB498 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C80C52D7DC5D44D8B3885D115994D116 }}
           package: .
