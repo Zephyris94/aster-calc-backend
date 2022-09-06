@@ -26,7 +26,7 @@ jobs:
         run: dotnet build --configuration Release GKCalculator/GKCalculator.sln
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}\GKCalculator
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}\GKCalculator\GKCalculator
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
