@@ -7,6 +7,7 @@ using System.Linq;
 using Model.Domain;
 using System.IO;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace Core.Services
 {
@@ -15,32 +16,46 @@ namespace Core.Services
         private readonly IExcelParsing _excelParsing;
         private readonly IRouteRepository _repo;
         private readonly IBlobStorageService _blobStorageService;
+        private readonly ILogger<ExcelDataMigrationService> _logger;
 
         public ExcelDataMigrationService(
             IExcelParsing excelParsing,
             IBlobStorageService blobStorageService,
-            IRouteRepository repo)
+            IRouteRepository repo,
+            ILogger<ExcelDataMigrationService> logger)
         {
             _excelParsing = excelParsing;
             _blobStorageService = blobStorageService;
 
             _repo = repo;
+            _logger = logger;
         }
 
         public async Task SeedData()
         {
-            if((await _repo.GetRoutes()).Any())
+            try
             {
-                return;
+                if ((await _repo.GetRoutes()).Any())
+                {
+                    return;
+                }
+
+                _logger.LogInformation("Import routes");
+                List<RouteModel> routes = await ImportRoutes();
+
+                _logger.LogInformation("Register nodes");
+                await RegisterNodes(routes);
+
+                _logger.LogInformation("Bind nodes");
+                await BindNodes(routes);
+
+                _logger.LogInformation("Register routes");
+                await _repo.RegisterRoutes(routes);
             }
-
-            List<RouteModel> routes = await ImportRoutes();
-
-            await RegisterNodes(routes);
-
-            await BindNodes(routes);
-
-            await _repo.RegisterRoutes(routes);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+            }
         }
 
         private async Task<List<RouteModel>> ImportRoutes()
