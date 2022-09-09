@@ -1,14 +1,5 @@
 using Api.ConfigurationExcensions;
-using Core;
-using Core.Services;
-using Core.Settings;
-using Core.Utility;
 using DataAccess;
-using DataAccess.Repositories;
-using Infrastructure;
-using Infrastructure.Repositories;
-using Infrastructure.Services;
-using Infrastructure.Utility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +7,9 @@ using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
-using NLog.Web;
+using System;
 
 namespace Api
 {
@@ -27,30 +18,43 @@ namespace Api
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            var nlogLoggerProvider = new NLogLoggerProvider();
+
+            Logger = nlogLoggerProvider.CreateLogger(typeof(Startup).FullName);
         }
+
+        public ILogger Logger { get; }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(Startup));
+            try
+            {
+                services.AddAutoMapper(typeof(Startup));
 
-            services.ConfigureOptions(Configuration);
+                services.ConfigureOptions(Configuration, Logger);
 
-            services.ConfigureDomainServices();
+                services.ConfigureDomainServices(Logger);
 
-            services.ConfigureDataAccessRepositories();
+                services.ConfigureDataAccessRepositories(Logger);
 
-            services.ConfigureDatabase(Configuration);
+                services.ConfigureDatabase(Configuration, Logger);
 
-            services.ConfigureAzureServices(Configuration);
+                services.ConfigureAzureServices(Configuration, Logger);
 
-            services.AddCors(Configuration);
+                services.AddCors(Configuration);
 
-            services.AddControllers();
+                services.AddControllers();
 
-            services.AddSwaggerGen();
+                services.AddSwaggerGen();
+            }
+            catch(Exception ex)
+            {
+                Logger.LogError(ex.Message, ex);
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

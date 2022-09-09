@@ -1,6 +1,4 @@
-﻿using Azure.Core;
-using Azure.Identity;
-using Core;
+﻿using Core;
 using Core.Services;
 using Core.Settings;
 using Core.Utility;
@@ -14,14 +12,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
+using Microsoft.Extensions.Logging;
 
 namespace Api.ConfigurationExcensions
 {
     public static class ConfigurationExtensions
     {
-        public static void ConfigureDomainServices(this IServiceCollection services)
+        public static void ConfigureDomainServices(this IServiceCollection services, ILogger logger)
         {
+            logger.LogInformation("Configure services");
             services.AddScoped<IPathFindingService, PathFindingService>();
             services.AddScoped<IGraphBuildingService, GraphBuildingService>();
             services.AddScoped<IRouteProviderService, RouteProviderService>();
@@ -33,30 +32,34 @@ namespace Api.ConfigurationExcensions
             services.AddSingleton<IExcelParsing, ExcelParsing>();
         }
 
-        public static void ConfigureDataAccessRepositories(this IServiceCollection services)
+        public static void ConfigureDataAccessRepositories(this IServiceCollection services, ILogger logger)
         {
+            logger.LogInformation("Configure repositories");
             services.AddScoped<IRouteRepository, RouteRepository>();
             services.AddScoped<ICalculationRepository, CalculationRepository>();
         }
 
-        public static void ConfigureAzureServices(this IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureAzureServices(this IServiceCollection services, IConfiguration configuration, ILogger logger)
         {
+            logger.LogInformation("Configure azure services");
             services.AddAzureClients(builder =>
             {
                 builder.AddBlobServiceClient(configuration.GetConnectionString("AzureBlobStorageString"));
             });
         }
 
-        public static void ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureDatabase(this IServiceCollection services, IConfiguration configuration, ILogger logger)
         {
+            logger.LogInformation("Configure db");
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(
                     configuration.GetConnectionString("AzureSqlConnection"),
                     b => b.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
         }
 
-        public static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration, ILogger logger)
         {
+            logger.LogInformation("Configure options");
             services.AddOptions<DataSourceOptions>();
             services.Configure<DataSourceOptions>(configuration.GetSection("DataSource"));
         }

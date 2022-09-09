@@ -1,11 +1,8 @@
-using Azure.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage.Auth;
 using NLog;
-using NLog.Extensions.Logging;
 using NLog.Web;
 using System;
 using System.Reflection;
@@ -16,14 +13,18 @@ namespace Api
     {
         public static void Main(string[] args)
         {
+            var logger = LogManager.GetCurrentClassLogger();
             try
             {
+                logger.Info("Init");
+
                 var builder = CreateHostBuilder(args);
 
                 builder.Build().Run();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.Error(ex);
                 throw;
             }
             finally
