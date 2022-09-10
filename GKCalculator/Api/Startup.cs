@@ -1,4 +1,5 @@
 using Api.ConfigurationExcensions;
+using Api.ExceptionHandling;
 using DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -65,6 +66,8 @@ namespace Api
                 app.UseDeveloperExceptionPage();
                 dataContext.Database.Migrate();
             }
+
+            app.ConfigureExceptionHandler(Logger);
 
             app.UseSwagger();
             app.UseSwaggerUI();

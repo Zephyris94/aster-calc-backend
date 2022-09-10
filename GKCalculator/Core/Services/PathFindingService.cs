@@ -14,19 +14,14 @@ namespace Core.Services
         private readonly IPathFindingAlgorithm _pathFindingAlgorithm;
         private readonly IRouteProviderService _routeProviderService;
 
-        private readonly bool _useCache;
-
         public PathFindingService(
             IGraphBuildingService graphBuildingService,
             IPathFindingAlgorithm pathFindingAloAlgorithm,
-            IRouteProviderService routeProviderService,
-            IOptions<DataSourceOptions> dataSettings)
+            IRouteProviderService routeProviderService)
         {
             _graphBuildingService = graphBuildingService;
             _pathFindingAlgorithm = pathFindingAloAlgorithm;
             _routeProviderService = routeProviderService;
-
-            _useCache = dataSettings.Value.UseCache;
         }
 
         public async Task<List<RouteModel>> FindPath(LineagePathFindingModel request)

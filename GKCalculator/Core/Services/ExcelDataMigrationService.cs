@@ -33,29 +33,22 @@ namespace Core.Services
 
         public async Task SeedData()
         {
-            try
+            if ((await _repo.GetRoutes()).Any())
             {
-                if ((await _repo.GetRoutes()).Any())
-                {
-                    return;
-                }
-
-                _logger.LogInformation("Import routes");
-                List<RouteModel> routes = await ImportRoutes();
-
-                _logger.LogInformation("Register nodes");
-                await RegisterNodes(routes);
-
-                _logger.LogInformation("Bind nodes");
-                await BindNodes(routes);
-
-                _logger.LogInformation("Register routes");
-                await _repo.RegisterRoutes(routes);
+                return;
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-            }
+
+            _logger.LogInformation("Import routes");
+            List<RouteModel> routes = await ImportRoutes();
+
+            _logger.LogInformation("Register nodes");
+            await RegisterNodes(routes);
+
+            _logger.LogInformation("Bind nodes");
+            await BindNodes(routes);
+
+            _logger.LogInformation("Register routes");
+            await _repo.RegisterRoutes(routes);
         }
 
         private async Task<List<RouteModel>> ImportRoutes()
