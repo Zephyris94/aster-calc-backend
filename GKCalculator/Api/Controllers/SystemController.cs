@@ -16,12 +16,12 @@ namespace Api.Controllers
             _dataMigrationService = dataMigrationService;
         }
 
-        [HttpGet("Seed")]
-        [EnableCors("AllowOrigin")]
-        public async Task<IActionResult> Sources()
-        {
-            await _dataMigrationService.SeedData();
-            return Ok();
-        }
+        //[HttpGet("Seed")]
+        //[EnableCors("AllowOrigin")]
+        //public async Task<IActionResult> Sources()
+        //{
+        //    await _dataMigrationService.SeedData();
+        //    return Ok();
+        //}
     }
 }
