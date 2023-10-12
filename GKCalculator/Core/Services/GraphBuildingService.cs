@@ -80,7 +80,7 @@ namespace Core.Services
             for (int i = 0; i < list.Count; i++)
             {
                 if (wyvernPaths.Any(x =>
-                    x.Source == list[i].Source && x.Destination == list[i].Destination) &&
+                    x.Source.Id == list[i].Source.Id && x.Destination.Id == list[i].Destination.Id) &&
                     excludedMoveTypes.Contains(list[i].MoveType))
                 {
                     list.RemoveAt(i);

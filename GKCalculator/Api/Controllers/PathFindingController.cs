@@ -52,11 +52,13 @@ namespace Api.Controllers
 
             _logger.LogInformation("Calculation succeeded", request);
 
-            return new LineagePathFindingResponse
+            var result = new LineagePathFindingResponse
             {
                 DefaultPath = _mapper.Map<List<PathModelResponse>>(defaultResultTask.Result),
                 CustomPath = _mapper.Map<List<PathModelResponse>>(resultTask.Result),
             };
+
+            return result;
         }
 
         private LineagePathFindingModel CreateDefaultRequest(LineagePathFindingModel prototype)
