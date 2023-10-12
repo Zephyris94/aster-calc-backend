@@ -19,7 +19,8 @@ namespace Api.MappingProfiles
                 .ForMember(dest => dest.Destinations, opt => opt.Ignore());
             CreateMap<RouteModel, PathModelResponse>()
                 .ForMember(dest => dest.Source, src => src.MapFrom(x => x.Source.Name))
-                .ForMember(dest => dest.Destination, src => src.MapFrom(x => x.Destination.Name));
+                .ForMember(dest => dest.Destination, src => src.MapFrom(x => x.Destination.Name))
+                .ForMember(dest => dest.MoveType, src => src.MapFrom(x => x.MoveType));
 
             CreateMap<NodeRequest, NodeModel>();
             CreateMap<NodeModel, NodeResponse>();

@@ -10,6 +10,6 @@ namespace Model.DataTransfer
 
         public int Price { get; set; }
 
-        public MoveType Type { get; set; }
+        public MoveType MoveType { get; set; }
     }
 }
