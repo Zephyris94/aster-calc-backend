@@ -32,7 +32,13 @@ namespace Core.Services
         {
             if (_useCache)
             {
-                return (await GetFromCache(() => _cacheService.GetDestinations())).Where(x => ids.Contains(x.Id)).ToList();
+                var destinations = await GetFromCache(() => _cacheService.GetDestinations());
+                var result = new List<NodeModel>();
+                foreach (var id in ids)
+                {
+                    result.Add(destinations.FirstOrDefault(x => x.Id == id));
+                }
+                return result;
             }
 
             return await _routeRepo.GetNodesById(ids);
